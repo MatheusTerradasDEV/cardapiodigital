@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOCES DA CELINA - Os melhores doces de Tanabi</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./assets/icon.ico">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -33,12 +34,8 @@
     <!--HEADER-->
     <header class="w-full h-[420px] bg-zinc-900 bg-home bg-cover bg-center">
         <div class="w-full h-full flex flex-col justify-center items-center">
-           
-            
-
             <h1 class="text-4xl mt-4 mb-2 font-bold text-black">Doces da Celina</h1>
             <span class="text-black font-medium">Rua Anibal Menegasso N°35</span>
-
             <div class="bg-green-600 px-4 py-1 rounded-lg mt-5" id="date-span">
                 <span class="text-white font-medium">Segunda a Domingo - 8:00 às 18:00 </span>
             </div>
@@ -52,72 +49,65 @@
 
     <!--INICIO MENU-->
     <div id="menu">
-
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 md:gap-10 mx-auto max-w-7xl px-2">
 
-        <!--PRODUTO ITEM-->
-        <div class="flex gap-4 p-4">
-            <img src="./assets/doce de leite.webp" alt="Doce de Leite" 
-            class="w-30 h-28 rounded-md hover:scale-110 hover:rotate-2 duration-300">
+            <!--PRODUTO ITEM-->
+            <div class="flex gap-4 p-4">
+                <img src="./assets/doce de leite.webp" alt="Doce de Leite" class="w-30 h-28 rounded-md hover:scale-110 hover:rotate-2 duration-300">
+                <div>
+                    <p class="font-bold text-xl">Doce de Leite 0,5 kg</p>
+                    <p class="text-sm">Descubra o sabor irresistível do nosso doce de leite artesanal! 
+                        Feito com ingredientes selecionados e preparado com muito carinho, cada colherada é uma explosão de doçura e tradição. Perfeito para acompanhar sobremesas ou saborear puro!</p>
 
-            <div>
-                <p class="font-bold text-xl">Doce de Leite 1 Litro</p>
-                <p class="text-sm">Descubra o sabor irresistível do nosso doce de leite artesanal! 
-                    Feito com ingredientes selecionados e preparado com muito carinho, cada colherada é uma explosão de doçura e tradição. Perfeito para acompanhar sobremesas ou saborear puro!</p>
-
-                <div class="flex items-center gap-2 justify-between mt-3">
-                    <p class="font-bold text-lg">R$ 15,00</p>
-                    <button class="bg-gray-900 px-5 rounded add-to-cart-btn" data-name="Doce de Leite" data-price="15,00">
-                        <i class="fa fa-cart-plus text-lg text-white"></i>
-                    </button>
+                    <div class="flex items-center gap-2 justify-between mt-3">
+                        <p class="font-bold text-lg">R$ 25,00</p>
+                        <p class="quantity-available">Disponível: <span class="stock-value">30</span></p>
+                        <input type="hidden" class="stock-input" value="30">
+                        <button class="bg-gray-900 px-5 rounded add-to-cart-btn" data-name="Doce de Leite" data-price="25.00">
+                            <i class="fa fa-cart-plus text-lg text-white"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+            
+            <div class="flex gap-4 p-4">
+                <img src="./assets/docedeabobora.jpeg" alt="Doce de Abóbora" class="w-30 h-28 rounded-md hover:scale-110 hover:rotate-2 duration-300">
+                <div>
+                    <p class="font-bold text-xl">Doce de Abóbora 0,5 kg</p>
+                    <p class="text-sm">Experimente o nosso doce de abóbora artesanal! Preparado com abóboras frescas e um toque especial de especiarias, esse doce traz o sabor autêntico da tradição. Perfeito para sobremesas ou para ser saboreado puro, é uma delícia que encanta a cada pedaço!</p>
         
-
-         
-         <div class="flex gap-4 p-4">
-            <img src="./assets/docedeabobora.jpeg" alt="Doce de Abóbora" 
-            class="w-30 h-28 rounded-md hover:scale-110 hover:rotate-2 duration-300">
-
-            <div>
-                <p class="font-bold text-xl">Doce de Abóbora</p>
-                <p class="text-sm">Experimente o nosso doce de abóbora artesanal! Preparado com abóboras frescas e um toque especial de especiarias, esse doce traz o sabor autêntico da tradição. Perfeito para sobremesas ou para ser saboreado puro, é uma delícia que encanta a cada pedaço!</p>
-
-                <div class="flex items-center gap-2 justify-between mt-3">
-                    <p class="font-bold text-lg">R$ 25,00</p>
-                    <button class="bg-gray-900 px-5 rounded add-to-cart-btn" data-name="Doce de Abóbora" data-price="25,00">
-                        <i class="fa fa-cart-plus text-lg text-white"></i>
-                    </button>
+                    <div class="flex items-center gap-2 justify-between mt-3">
+                        <p class="font-bold text-lg">R$ 15,00</p>
+                        <p class="quantity-available">Disponível: <span class="stock-value" data-product-id="doce-abobora">20</span></p>
+                        <input type="hidden" class="stock-input" value="20">
+                        <button class="bg-gray-900 px-5 rounded add-to-cart-btn" data-name="Doce de Abóbora" data-price="15.00">
+                            <i class="fa fa-cart-plus text-lg text-white"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="flex gap-4 p-4">
+                <img src="./assets/mamao.jpg" alt="Doce de Mamão" class="w-30 h-28 rounded-md hover:scale-110 hover:rotate-2 duration-300">
+                <div>
+                    <p class="font-bold text-xl">Doce de Mamão 0,5 kg</p>
+                    <p class="text-sm">Descubra o sabor tropical do nosso doce de mamão! Feito com mamão fresco e açúcar na medida certa, cada pedaço é uma explosão de doçura e frescor. Ideal para adoçar o seu dia ou para acompanhar aquele cafezinho especial. Experimente e apaixone-se! </p>
 
-        <div class="flex gap-4 p-4">
-            <img src="./assets/mamao.jpg" alt="Doce de Mamão" 
-            class="w-30 h-28 rounded-md hover:scale-110 hover:rotate-2 duration-300">
-
-            <div>
-                <p class="font-bold text-xl">Doce de Mamão</p>
-                <p class="text-sm">Descubra o sabor tropical do nosso doce de mamão! Feito com mamão fresco e açúcar na medida certa, cada pedaço é uma explosão de doçura e frescor. Ideal para adoçar o seu dia ou para acompanhar aquele cafezinho especial. Experimente e apaixone-se! </p>
-
-                <div class="flex items-center gap-2 justify-between mt-3">
-                    <p class="font-bold text-lg">R$ 25,00</p>
-                    <button class="bg-gray-900 px-5 rounded add-to-cart-btn" data-name="Doce de Mamão" data-price="25,00">
-                        <i class="fa fa-cart-plus text-lg text-white"></i>
-                    </button>
+                    <div class="flex items-center gap-2 justify-between mt-3">
+                        <p class="font-bold text-lg">R$ 15,00</p>
+                        <p class="quantity-available">Disponível: <span class="stock-value">20</span></p>
+                        <input type="hidden" class="stock-input" value="20">
+                        <button class="bg-gray-900 px-5 rounded add-to-cart-btn" data-name="Doce de Mamão" data-price="15.00">
+                            <i class="fa fa-cart-plus text-lg text-white "></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!--fIM PRODUTO ITEM-->
-
+            <!--fIM PRODUTO ITEM-->
         </main>
-
+    </div>
     <!--FIM MENU-->
 
     <!--MODAL CART-->
-    
     <div id="cart-modal" class="bg-black bg-opacity-60 w-full h-full fixed top-0 left-0 z-[99] items-center justify-center hidden">
         <div class="bg-white p-5 rounded-md min-w-[90%] md:min-w-[600px]">
             <h2 class="text-center font-bold text-2xl mb-2">Meu carrinho</h2>
@@ -137,26 +127,58 @@
                 <label for="pickup-checkbox">Retirar pessoalmente</label>
             </div>
 
-            <div class="flex items-center justify-between mt-5 w-full">
-                <button id="close-modal-btn" class="bg-gray-500 text-white px-4 py-1 rounded">Fechar</button>
-                <button id="checkout-btn" class="bg-green-500 text-white px-4 py-1 rounded">Finalizar pedido</button>
+            <div class="mt-4 hidden" id="name-container">
+                <p class="font-bold">Nome</p>
+                <input type="text" placeholder="Digite seu nome" id="name-input" 
+                class="w-full border-2 p-1 rounded my-1">
+                <p class="text-red-500 hidden" id="name-warn">Digite seu nome completo!</p>
+            </div>
+
+            <div class="mt-4 hidden" id="time-container">
+                <p class="font-bold">Horário de Retirada</p>
+                <select id="pickup-time-input" class="w-full border-2 p-1 rounded my-1">
+                    <option value="">Selecione um horário</option>
+                    <option value="8:00">8:00</option>
+                    <option value="9:00">9:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                </select>
+                <p class="text-red-500 hidden" id="time-warn">Selecione um horário de retirada!</p>
+            </div>
+
+            <div class="mt-4 hidden" id="payment-container">
+                <p class="font-bold">Meio de Pagamento</p>
+                <select id="payment-method" class="w-full border-2 p-1 rounded my-1">
+                    <option value="">Selecione um meio de pagamento</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="Pix">Pix</option>
+                </select>
+                <p class="text-red-500 hidden" id="payment-warn">Selecione um meio de pagamento!</p>
+            </div>
+
+            <div class="flex justify-end mt-4">
+                <button id="close-modal" class="py-2 px-5 bg-gray-600 text-white rounded-md mr-2">Cancelar</button>
+                <button id="checkout-btn" class="py-2 px-5 bg-pink-400 text-white rounded-md">Finalizar Compra</button>
             </div>
         </div>
     </div>
-    
     <!--FIM MODAL CART-->
 
-    <!--BUTTON CART FOOTER-->
-    <footer class="w-full bg-red-600">
-        <button id="cart-btn" class="w-full flex items-center justify-center gap-2 font-bold text-white px-4 py-2 rounded" style="background-color: #fa8fb1; border: 2px solid #ffff;">
-            <span id="cart-count" class="text-white">0</span> Veja meu carrinho
-            <i class="fa fa-cart-plus text-lg text-white"></i>
-        </button>
-    </footer>
-    <!--FIM BUTTON CART FOOTER-->
+    <button class="fixed right-5 bottom-5 bg-pink-400 p-4 rounded-full" id="cart-btn">
+        <i class="fa fa-shopping-cart text-white text-xl"></i>
+        <span id="cart-counter" class="bg-red-600 px-2 py-1 rounded-full text-white text-xs absolute -top-2 -right-2">0</span>
+    </button>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="./script.js"></script>
 
 </body>
 </html>
