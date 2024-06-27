@@ -36,7 +36,6 @@ menu.addEventListener("click", function(event) {
         if (stock > 0) {
             addToCart(name, price);
             updateQuantityAvailable(name, -1);
-            stockInput.value = stock - 1;
             saveStockToLocalStorage();
         } else {
             Toastify({
@@ -47,7 +46,7 @@ menu.addEventListener("click", function(event) {
                 position: "right",
                 stopOnFocus: true,
                 style: {
-                    background: "#ef4444",
+                    background: "linear-gradient(135deg, #ff7eb6, #ff4d80)",
                 },
             }).showToast();
         }
@@ -137,6 +136,14 @@ function removeItemCart(name) {
     }
 }
 
+
+
+function checkRestaurantOpen() {
+    const data = new Date();
+    const hora = data.getHours();
+    return hora >= 8 && hora < 22;
+}
+
 checkoutBtn.addEventListener("click", function() {
     const isOpen = checkRestaurantOpen();
     if (!isOpen) {
@@ -157,6 +164,7 @@ checkoutBtn.addEventListener("click", function() {
 
     if (cart.length === 0) return;
 
+    let pickupText = "";
     if (pickupCheckbox.checked) {
         if (nameInput.value === "") {
             nameWarn.classList.remove("hidden");
@@ -169,44 +177,62 @@ checkoutBtn.addEventListener("click", function() {
             timeInput.classList.add("border-red-500");
             return;
         }
+
+        // Monta o texto para retirada pessoal
+        pickupText = `Retirar pessoalmente\n`;
+        pickupText += `Nome: ${nameInput.value}\n`;
+        pickupText += `Horário de Retirada: ${timeInput.value}\n`;
+
+        // Adiciona o meio de pagamento se selecionado
+        if (paymentMethod.value !== "") {
+            pickupText += `Meio de Pagamento: ${paymentMethod.value}`;
+        }
     } else {
         if (addressInput.value === "") {
             addressWarn.classList.remove("hidden");
             addressInput.classList.add("border-red-500");
             return;
         }
+
+        
+        pickupText += `Endereço: ${addressInput.value}\n`;
+
+   
+        if (nameInput.value !== "") {
+            pickupText += `Nome: ${nameInput.value}\n`;
+        }
+
+       
+        if (paymentMethod.value !== "") {
+            pickupText += `Meio de Pagamento: ${paymentMethod.value}`;
+        } else {
+            pickupText += `\n`;
+        }
     }
 
-    if (paymentMethod.value === "") {
-        paymentWarn.classList.remove("hidden");
-        paymentMethod.classList.add("border-red-500");
-        return;
-    }
-
-    const cartItems = cart.map((item) => {
-        return (
-            `Produto: ${item.name}\nQuantidade: ${item.quantity}\nPreço: R$ ${item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`
-        );
+    const cartItemsText = cart.map((item) => {
+        return `${item.name}: ${item.quantity}x - R$ ${(item.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }).join("\n");
 
-    let message = encodeURIComponent(cartItems);
-    const phone = "17996249944";
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    let pickupText = "";
-    if (pickupCheckbox.checked) {
-        pickupText = `Retirar pessoalmente às ${timeInput.value}`;
-    } else {
-        pickupText = `Endereço: ${addressInput.value}`;
-    }
+    const receipt =
+`*Recibo de Compra* 
 
-    let nameText = "";
-    if (nameInput.value) {
-        nameText = `Nome: ${nameInput.value}`;
-    }
+*Produtos:*
+${cartItemsText}
 
-    let paymentText = `Meio de Pagamento: ${paymentMethod.value}`;
+*Detalhes da Compra:*
+${pickupText ? `${pickupText}` : ''}
+------------------------
+*Total:*
+R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 
-    window.open(`https://wa.me/${phone}?text=${message}\n${pickupText}\n${nameText}\n${paymentText}`, "_blank");
+Obrigado por comprar conosco!`;
+
+    const message = encodeURIComponent(receipt);
+    const phone = "5517996249944"; // Substitua pelo seu número de WhatsApp, incluindo o código do país sem o sinal de +
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
 
     cart.forEach(item => updateQuantityAvailable(item.name, -item.quantity, true));
     cart = [];
@@ -215,11 +241,14 @@ checkoutBtn.addEventListener("click", function() {
     saveStockToLocalStorage();
 });
 
-function checkRestaurantOpen() {
-    const data = new Date();
-    const hora = data.getHours();
-    return hora >= 8 && hora < 18;
-}
+
+
+
+
+
+
+
+
 
 function clearPickupCheckbox() {
     pickupCheckbox.checked = false;
@@ -270,16 +299,6 @@ addressInput.addEventListener("input", function() {
     }
 });
 
-nameInput.addEventListener("input", function() {
-    if (nameInput.value.trim() !== "") {
-        nameInput.classList.remove("border-red-500");
-        nameWarn.classList.add("hidden");
-        paymentContainer.classList.remove("hidden");
-    } else {
-        paymentContainer.classList.add("hidden");
-    }
-});
-
 timeInput.addEventListener("input", function() {
     if (timeInput.value.trim() !== "") {
         timeInput.classList.remove("border-red-500");
@@ -311,7 +330,7 @@ function saveStockToLocalStorage() {
     const stockData = {};
 
     menu.querySelectorAll(".stock-input").forEach((input) => {
-        const name = input.closest(".add-to-cart-btn").getAttribute("data-name");
+        const name = input.closest(".flex").querySelector(".add-to-cart-btn").getAttribute("data-name");
         const stock = parseInt(input.value);
         stockData[name] = stock;
     });
@@ -319,44 +338,60 @@ function saveStockToLocalStorage() {
     localStorage.setItem("stockData", JSON.stringify(stockData));
 }
 
-function loadStockFromLocalStorage() {
-    const stockData = JSON.parse(localStorage.getItem("stockData")) || {};
 
-    menu.querySelectorAll(".stock-input").forEach((input) => {
-        const name = input.closest(".add-to-cart-btn").getAttribute("data-name");
-        if (stockData.hasOwnProperty(name)) {
-            input.value = stockData[name];
-            if (stockData[name] <= 0) {
-                input.closest(".add-to-cart-btn").disabled = true;
-            }
-        }
-    });
-}
 
-document.addEventListener('DOMContentLoaded', function () {
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
 
-    addToCartButtons.forEach(button => {
-        const stockValueElement = button.closest('.flex').querySelector('.stock-value');
-        const productId = stockValueElement.getAttribute('data-product-id');
-        
-        // Load stock value from localStorage if it exists
-        let stockValue = localStorage.getItem(`stock-${productId}`);
-        if (stockValue !== null) {
-            stockValueElement.textContent = stockValue;
-        } else {
-            stockValue = parseInt(stockValueElement.textContent);
-        }
-
-        button.addEventListener('click', function () {
-            if (stockValue > 0) {
-                stockValue--;
-                stockValueElement.textContent = stockValue;
-                localStorage.setItem(`stock-${productId}`, stockValue);
-            } else {
-                alert('Produto esgotado!');
-            }
-        });
-    });
+addressInput.addEventListener("input", function() {
+    if (addressInput.value.trim() !== "") {
+       
+        addressWarn.textContent = "Atenção: As entregas são feitas a partir dos sábados.";
+        addressWarn.classList.remove("hidden");
+    } else {
+        addressWarn.classList.add("hidden");
+    }
 });
+
+
+
+
+
+
+
+
+
+
+pickupCheckbox.addEventListener("change", function() {
+    if (pickupCheckbox.checked) {
+        // Mostra os containers necessários para retirada pessoal
+        nameContainer.classList.remove("hidden");
+        timeContainer.classList.remove("hidden");
+
+        // Mostra o container de meio de pagamento
+        paymentContainer.classList.remove("hidden");
+    } else {
+        // Esconde os containers quando não for retirada pessoal
+        nameContainer.classList.add("hidden");
+        timeContainer.classList.add("hidden");
+
+        // Esconde o container de meio de pagamento
+        paymentContainer.classList.add("hidden");
+    }
+});
+
+
+addressInput.addEventListener("input", function() {
+    // Verifica se o campo de endereço não está vazio
+    if (addressInput.value.trim() !== "") {
+        // Mostra o container de nome
+        nameContainer.classList.remove("hidden");
+    } else {
+        // Esconde o container de nome se o campo de endereço estiver vazio
+        nameContainer.classList.add("hidden");
+    }
+});
+
+
+
+
+
 
