@@ -29,12 +29,11 @@
     -->
 
 
-    <script type="module">
-        
+   <script type="module">
+
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js';
         import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-analytics.js';
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js';
-    
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp, addDoc, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js';
         
         const firebaseConfig = {
             apiKey: "AIzaSyD7GssMG_ij5-v3FGLIUySc7CnDzePJKRU",
@@ -45,12 +44,10 @@
             appId: "1:366286538694:web:0578e5ea0e3c0a761954c7",
             measurementId: "G-2N2D2EG218"
         };
-    
         
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
-    
         
         async function addProduct(id, name, quantity) {
             try {
@@ -60,13 +57,12 @@
                     quantity: quantity,
                     createdAt: new Date()
                 });
-    
+        
                 console.log(`Produto ${name} adicionado com ID: ${id}`);
             } catch (e) {
                 console.error("Erro ao adicionar produto: ", e);
             }
         }
-    
         
         async function initializeProducts() {
             try {
@@ -76,11 +72,11 @@
                     { id: 3, name: 'Doce de Mamão', quantity: 10 },
                     { id: 4, name: 'Doce de Figo', quantity: 10 }
                 ];
-    
+        
                 for (const product of products) {
                     const productRef = doc(db, "products", product.id.toString());
                     const productDoc = await getDoc(productRef);
-    
+        
                     if (!productDoc.exists()) {
                         await addProduct(product.id, product.name, product.quantity);
                     }
@@ -89,15 +85,13 @@
                 console.error("Erro ao inicializar produtos: ", e);
             }
         }
-    
-    
-    
+        
         // Função para atualizar a quantidade do produto no Firestore
         async function updateProductQuantity(id, quantity) {
             try {
                 const productRef = doc(db, "products", id.toString());
                 const productDoc = await getDoc(productRef);
-    
+        
                 if (productDoc.exists()) {
                     const currentQuantity = productDoc.data().quantity;
                     if (currentQuantity >= quantity) {
@@ -105,27 +99,27 @@
                             quantity: currentQuantity - quantity
                         });
                         console.log(`Estoque atualizado: ${productDoc.data().name} - Nova quantidade: ${currentQuantity - quantity}`);
-                        return true;  
+                        return true;
                     } else {
                         console.error(`Estoque insuficiente para ${productDoc.data().name}`);
-                        return false; 
+                        return false;
                     }
                 } else {
                     console.error(`Produto com ID ${id} não encontrado`);
-                    return false;  
+                    return false;
                 }
             } catch (e) {
                 console.error("Erro ao atualizar quantidade do produto: ", e);
-                return false;  
+                return false;
             }
         }
-    
+        
         // Função para verificar disponibilidade do produto no Firestore
         async function checkProductAvailability(id) {
             try {
                 const productRef = doc(db, "products", id.toString());
                 const productDoc = await getDoc(productRef);
-    
+        
                 if (productDoc.exists()) {
                     const currentQuantity = productDoc.data().quantity;
                     return currentQuantity > 0;
@@ -138,13 +132,13 @@
                 return false;
             }
         }
-    
+        
         // Função JavaScript do carrinho
         let cart = [];
-    
+        
         function addToCart(name, price) {
             const existingItem = cart.find(item => item.name === name);
-    
+        
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
@@ -156,26 +150,26 @@
             }
             updateCartModal();
         }
-    
+        
         function updateCartModal() {
             console.log('Carrinho atualizado:', cart);
         }
-    
+        
         // Função para adicionar produto ao carrinho
         async function handleAddToCart(event) {
             const button = event.target.closest('.add-to-cart-btn');
             const productId = button.getAttribute('data-id');
             const productName = button.getAttribute('data-name');
             const productPrice = parseFloat(button.getAttribute('data-price'));
-    
-            const productQuantity = 1; 
-    
+        
+            const productQuantity = 1;
+        
             if (productId !== null && productId !== undefined) {
                 const isAvailable = await checkProductAvailability(productId);
                 if (isAvailable) {
                     const updateSuccess = await updateProductQuantity(productId, productQuantity);
                     if (updateSuccess) {
-                        addToCart(productName, productPrice);  
+                        addToCart(productName, productPrice);
                     } else {
                         Toastify({
                             text: "Estoque insuficiente!",
@@ -206,20 +200,14 @@
                 console.error("Erro: 'data-id' do produto é nulo ou indefinido.");
             }
         }
-    
+        
         // Adicionando evento de clique aos botões de adicionar ao carrinho
         document.addEventListener('DOMContentLoaded', () => {
             const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
             addToCartButtons.forEach(button => {
                 button.addEventListener('click', handleAddToCart);
             });
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll(".add-to-cart-btn").forEach(button => {
-                button.addEventListener("click", handleAddToCart);
-            });
-
+        
             // Verificar a disponibilidade de todos os produtos ao carregar a página
             document.querySelectorAll(".add-to-cart-btn").forEach(button => {
                 const productId = button.getAttribute('data-id');
@@ -229,13 +217,27 @@
                         if (doc.exists() && doc.data().quantity <= 0) {
                             button.disabled = true;
                             button.innerHTML = "Esgotado";
+                        } else {
+                            button.disabled = false;
+                    button.innerHTML = '<i class="fa fa-cart-plus text-lg text-white"></i>';
+
                         }
                     });
                 }
             });
+        
+            // Monitorar adições de produtos em tempo real
+            const productsCollectionRef = collection(db, "products");
+            onSnapshot(productsCollectionRef, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        const product = change.doc.data();
+                        console.log("Produto adicionado em tempo real: ", product);
+                        // Atualize a interface do usuário conforme necessário
+                    }
+                });
+            });
         });
-
-
         
 
 
