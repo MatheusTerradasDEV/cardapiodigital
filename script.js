@@ -141,7 +141,7 @@ function removeItemCart(name) {
 function checkRestaurantOpen() {
     const data = new Date();
     const hora = data.getHours();
-    return hora >= 8 && hora < 22;
+    return hora >= 8 && hora < 23;
 }
 
 checkoutBtn.addEventListener("click", function() {
