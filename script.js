@@ -178,12 +178,10 @@ checkoutBtn.addEventListener("click", function() {
             return;
         }
 
-        // Monta o texto para retirada pessoal
         pickupText = `Retirar pessoalmente\n`;
         pickupText += `Nome: ${nameInput.value}\n`;
         pickupText += `Horário de Retirada: ${timeInput.value}\n`;
 
-        // Adiciona o meio de pagamento se selecionado
         if (paymentMethod.value !== "") {
             pickupText += `Meio de Pagamento: ${paymentMethod.value}`;
         }
@@ -240,15 +238,6 @@ Obrigado por comprar conosco!`;
     clearPickupCheckbox();
     saveStockToLocalStorage();
 });
-
-
-
-
-
-
-
-
-
 
 function clearPickupCheckbox() {
     pickupCheckbox.checked = false;
@@ -338,9 +327,6 @@ function saveStockToLocalStorage() {
     localStorage.setItem("stockData", JSON.stringify(stockData));
 }
 
-
-
-
 addressInput.addEventListener("input", function() {
     if (addressInput.value.trim() !== "") {
        
@@ -351,41 +337,24 @@ addressInput.addEventListener("input", function() {
     }
 });
 
-
-
-
-
-
-
-
-
-
 pickupCheckbox.addEventListener("change", function() {
     if (pickupCheckbox.checked) {
-        // Mostra os containers necessários para retirada pessoal
         nameContainer.classList.remove("hidden");
         timeContainer.classList.remove("hidden");
 
-        // Mostra o container de meio de pagamento
         paymentContainer.classList.remove("hidden");
     } else {
-        // Esconde os containers quando não for retirada pessoal
         nameContainer.classList.add("hidden");
         timeContainer.classList.add("hidden");
-
-        // Esconde o container de meio de pagamento
         paymentContainer.classList.add("hidden");
     }
 });
 
 
 addressInput.addEventListener("input", function() {
-    // Verifica se o campo de endereço não está vazio
     if (addressInput.value.trim() !== "") {
-        // Mostra o container de nome
         nameContainer.classList.remove("hidden");
     } else {
-        // Esconde o container de nome se o campo de endereço estiver vazio
         nameContainer.classList.add("hidden");
     }
 });
