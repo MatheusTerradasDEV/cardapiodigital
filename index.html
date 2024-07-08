@@ -17,18 +17,11 @@
 
     <link rel="stylesheet" href="./styles/output.css" >
 
-    <! -- META TAG OG -->
     <meta property="og:type" content="website"/>
     <meta property="og:title" content="Doces da Celina - O melhor doce caseiro"/>
     <meta property="og:description" content="Conheça a nova loja online da Celina Doces!"/>
     <meta property="og:image" content="https://celinadoces.vercel.app/assets/bannermobileteste.png"/>
     <meta property="og:site_name" content="Doces da Celina"/>
-    
-
-    <!-- 
-        /* CONEXÃO COM O FIREBASE */
-    -->
-
 
    <script type="module">
 
@@ -87,7 +80,7 @@
             }
         }
         
-        // Função para atualizar a quantidade do produto no Firestore
+      
         async function updateProductQuantity(id, quantity) {
             try {
                 const productRef = doc(db, "products", id.toString());
@@ -115,7 +108,7 @@
             }
         }
         
-        // Função para verificar disponibilidade do produto no Firestore
+     
         async function checkProductAvailability(id) {
             try {
                 const productRef = doc(db, "products", id.toString());
@@ -156,7 +149,7 @@
             console.log('Carrinho atualizado:', cart);
         }
         
-        // Função para adicionar produto ao carrinho
+     
         async function handleAddToCart(event) {
             const button = event.target.closest('.add-to-cart-btn');
             const productId = button.getAttribute('data-id');
@@ -202,14 +195,14 @@
             }
         }
         
-        // Adicionando evento de clique aos botões de adicionar ao carrinho
+     
         document.addEventListener('DOMContentLoaded', () => {
             const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
             addToCartButtons.forEach(button => {
                 button.addEventListener('click', handleAddToCart);
             });
         
-            // Verificar a disponibilidade de todos os produtos ao carregar a página
+           
             document.querySelectorAll(".add-to-cart-btn").forEach(button => {
                 const productId = button.getAttribute('data-id');
                 if (productId !== null && productId !== undefined) {
@@ -227,7 +220,7 @@
                 }
             });
         
-            // Monitorar adições de produtos em tempo real
+         
             const productsCollectionRef = collection(db, "products");
             onSnapshot(productsCollectionRef, (snapshot) => {
                 snapshot.docChanges().forEach((change) => {
@@ -243,13 +236,6 @@
 
 
     </script>
-    <!-- 
-        /* FIM DA CONEXAO COM O FIREBASE */
-    -->
-
-
-
-
 
     <style>
         @media (min-width: 768px) {
@@ -343,21 +329,18 @@
 
 </head>
 <body>
-    <!--HEADER-->
     <header class="w-full h-[420px] bg-cover bg-center bg-home-mobile md:bg-home-pc">
-        <div class="w-full h-full flex flex-col justify-center items-center">
-          
+        <div class="w-full h-full flex flex-col justify-center items-center">          
     </header>
-    <!--FIM HEADER-->
+
 
     <h2 class="text-2xl md:text-3xl font-bold text-center mt-9 mb-6">
         Conheça nosso menu
     </h2>
 
-    <!--INICIO MENU-->
     <div id="menu">
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 md:gap-10 mx-auto max-w-7xl px-2">
-            <!--PRODUTO ITEM-->
+         
             <div class="product-item">
                 <img src="./assets/docedeleite.jpg" alt="Doce de Leite" class="product-image">
                 <div class="product-details">
@@ -421,12 +404,9 @@
                     </button>
                 </div>
             </div>
-            <!--fIM PRODUTO ITEM-->
         </main>
     </div>
-    <!--FIM MENU-->
-
-    <!--MODAL CART-->
+  
     <div id="cart-modal" class="bg-black bg-opacity-60 w-full h-full fixed top-0 left-0 z-[99] items-center justify-center hidden">
         <div class="bg-white p-5 rounded-md min-w-[90%] md:min-w-[600px]">
             <h2 class="text-center font-bold text-2xl mb-2">Meu carrinho</h2>
@@ -486,7 +466,6 @@
             </div>
         </div>
     </div>
-    <!--FIM MODAL CART-->
 
     <button class="fixed right-5 bottom-5 bg-pink-500 p-4 rounded-full" id="cart-btn">
         <i class="fa fa-shopping-cart text-white text-xl"></i>
