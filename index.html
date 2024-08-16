@@ -17,30 +17,37 @@
 
     <link rel="stylesheet" href="./styles/output.css" >
 
+    
     <meta property="og:type" content="website"/>
     <meta property="og:title" content="Doces da Celina - O melhor doce caseiro"/>
-    <meta property="og:description" content="Conheça a nova loja online da Celina Doces!"/>
-    <meta property="og:image" content="https://celinadoces.vercel.app/assets/bannermobileteste.png"/>
+    <meta property="og:image" content="./assets/bannermobileteste.png"/>
     <meta property="og:site_name" content="Doces da Celina"/>
 
-   <script type="module">
 
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js';
-        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-analytics.js';
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp, addDoc, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js';
+    
+
+    <!-- 
+        /* CONEXÃO COM O FIREBASE */
+    -->
+    
+
+    <script type="module">
+
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js';
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp, addDoc, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
         
         const firebaseConfig = {
-            apiKey: "AIzaSyC7bp9CNfpP7q7WbQ8DigZPmWgrngO7c8g",
-  authDomain: "doces2024-7661f.firebaseapp.com",
-  projectId: "doces2024-7661f",
-  storageBucket: "doces2024-7661f.appspot.com",
-  messagingSenderId: "80235209112",
-  appId: "1:80235209112:web:6ddfb5e1a665d853bd0bed",
-  measurementId: "G-EL561NFFXZ"
+            aapiKey: "AIzaSyD7GssMG_ij5-v3FGLIUySc7CnDzePJKRU",
+  authDomain: "doces-da-celina-fba34.firebaseapp.com",
+  projectId: "doces-da-celina-fba34",
+  storageBucket: "doces-da-celina-fba34.appspot.com",
+  messagingSenderId: "366286538694",
+  appId: "1:366286538694:web:0578e5ea0e3c0a761954c7",
+  measurementId: "G-2N2D2EG218"
         };
         
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getFirestore(app);
         
         async function addProduct(id, name, quantity) {
@@ -61,10 +68,11 @@
         async function initializeProducts() {
             try {
                 const products = [
-                    { id: 1, name: 'Doce de Leite', quantity: 10 },
+                    { id: 1,quantity: 'Doce de Leite', quantity: 10 },
                     { id: 2, name: 'Doce de Abóbora', quantity: 10 },
                     { id: 3, name: 'Doce de Mamão', quantity: 10 },
-                    { id: 4, name: 'Doce de Figo', quantity: 10 }
+                    { id: 4, name: 'Doce de Figo', quantity: 10 },
+                    { id: 5, name: 'Doce de Mamão Pedaço', quantity: 10 }
                 ];
         
                 for (const product of products) {
@@ -80,7 +88,7 @@
             }
         }
         
-      
+        // Função para atualizar a quantidade do produto no Firestore
         async function updateProductQuantity(id, quantity) {
             try {
                 const productRef = doc(db, "products", id.toString());
@@ -108,7 +116,7 @@
             }
         }
         
-     
+        // Função para verificar disponibilidade do produto no Firestore
         async function checkProductAvailability(id) {
             try {
                 const productRef = doc(db, "products", id.toString());
@@ -127,7 +135,7 @@
             }
         }
         
-      
+        // Função JavaScript do carrinho
         let cart = [];
         
         function addToCart(name, price) {
@@ -149,7 +157,7 @@
             console.log('Carrinho atualizado:', cart);
         }
         
-     
+        // Função para adicionar produto ao carrinho
         async function handleAddToCart(event) {
             const button = event.target.closest('.add-to-cart-btn');
             const productId = button.getAttribute('data-id');
@@ -195,14 +203,14 @@
             }
         }
         
-     
+        // Adicionando evento de clique aos botões de adicionar ao carrinho
         document.addEventListener('DOMContentLoaded', () => {
             const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
             addToCartButtons.forEach(button => {
                 button.addEventListener('click', handleAddToCart);
             });
         
-           
+            // Verificar a disponibilidade de todos os produtos ao carregar a página
             document.querySelectorAll(".add-to-cart-btn").forEach(button => {
                 const productId = button.getAttribute('data-id');
                 if (productId !== null && productId !== undefined) {
@@ -220,7 +228,7 @@
                 }
             });
         
-         
+            // Monitorar adições de produtos em tempo real
             const productsCollectionRef = collection(db, "products");
             onSnapshot(productsCollectionRef, (snapshot) => {
                 snapshot.docChanges().forEach((change) => {
@@ -232,10 +240,208 @@
                 });
             });
         });
-        
 
 
-    </script>
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('whatsappForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const whatsappNumber = document.getElementById('whatsappNumber').value;
+    
+    if (whatsappNumber) {
+      try {
+        // Verificar se o número já está cadastrado
+        const querySnapshot = await getDocs(query(collection(db, 'subscriptions'), where('whatsappNumber', '==', whatsappNumber)));
+        if (!querySnapshot.empty) {
+          Toastify({
+            text: "Número já cadastrado!",
+            duration: 3000,
+            close: true,
+            gravity: "top", // top or bottom
+            position: "right", // left, center, or right
+            backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+          }).showToast();
+          return;
+        }
+
+        // Adicionar o novo número
+        const docRef = await addDoc(collection(db, 'subscriptions'), {
+          whatsappNumber: whatsappNumber,
+          timestamp: serverTimestamp()
+        });
+        await setDoc(doc(db, 'subscriptions', docRef.id), { id: docRef.id }, { merge: true });
+        Toastify({
+          text: "Inscrição bem-sucedida!",
+          duration: 3000,
+          close: true,
+          gravity: "top", // top or bottom
+          position: "right", // left, center, or right
+          backgroundColor: "linear-gradient(to right, #f74780, #fa8fb1)",
+        }).showToast();
+      } catch (error) {
+        console.error('Erro ao inscrever:', error);
+        Toastify({
+          text: "Erro ao inscrever!",
+          duration: 3000,
+          close: true,
+          gravity: "top", // top or bottom
+          position: "right", // left, center, or right
+          backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+        }).showToast();
+      }
+    } else {
+      Toastify({
+        text: "Por favor, insira um número de WhatsApp válido.",
+        duration: 3000,
+        close: true,
+        gravity: "top", // top or bottom
+        position: "right", // left, center, or right
+        backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+      }).showToast();
+    }
+  });
+});
+
+
+
+
+
+async function getNextOrderId() {
+  const counterDocRef = doc(db, 'counters', 'orderCounter');
+  const counterDoc = await getDoc(counterDocRef);
+
+  if (counterDoc.exists()) {
+    const nextOrderId = counterDoc.data().nextOrderId;
+    await updateDoc(counterDocRef, {
+      nextOrderId: nextOrderId + 1
+    });
+    return nextOrderId;
+  } else {
+    // Se o documento não existir, inicialize-o
+    await setDoc(counterDocRef, {
+      nextOrderId: 2 // Começa com 2 porque o primeiro ID será 1
+    });
+    return 1;
+  }
+}
+
+document.getElementById('checkout-btn').addEventListener('click', async function(event) {
+  event.preventDefault();
+
+  // Capturar dados do formulário
+  const nome = document.getElementById('name-input').value.trim();
+  const endereco = document.getElementById('address').value.trim();
+  const cartItems = document.querySelectorAll('.cart-item');
+  let produtos = [];
+  
+  // Capturar e formatar o total dos produtos
+  let totalProdutosText = document.getElementById('cart-total').textContent.trim();
+  let totalProdutos = parseFloat(totalProdutosText.replace('R$', '').replace(',', '.')); // Substitui vírgula por ponto e remove 'R$'
+
+  // Capturar produtos no carrinho
+  cartItems.forEach(item => {
+    const nomeProduto = item.querySelector('.cart-item-title').textContent;
+    const precoProduto = parseFloat(item.querySelector('.cart-item-price').textContent.replace('R$', '').replace(',', '.').trim()); // Substitui vírgula por ponto e remove 'R$'
+    const quantidade = parseInt(item.querySelector('.cart-item-quantity').textContent.trim());
+
+    produtos.push(`${nomeProduto} (R$${precoProduto.toFixed(2)} x${quantidade})`);
+  });
+
+  // Transformar array de produtos em string
+  const produtosString = produtos.join(', ');
+
+  // Dados adicionais opcionais
+  const retirarPessoalmente = document.getElementById('pickup-checkbox').checked;
+  const horarioRetirada = document.getElementById('pickup-time-input').value;
+  const meioPagamento = document.getElementById('payment-method').value;
+
+  try {
+    const orderId = await getNextOrderId();
+
+    // Enviar para o Firebase
+    const docRef = await addDoc(collection(db, 'compras'), {
+      nomeCliente: nome,
+      enderecoEntrega: endereco,
+      produtos: produtosString, // Salvar como string
+      retirarPessoalmente: retirarPessoalmente,
+      horarioRetirada: horarioRetirada,
+      meioPagamento: meioPagamento,
+      dataCompra: serverTimestamp(),
+      orderId: orderId, // Incluir o orderId gerado
+      totalProdutos: totalProdutos // Adicionar o total dos produtos
+    });
+
+    console.log('Compra registrada com ID: ', docRef.id);
+    // Limpar carrinho ou outra ação após sucesso
+    limparCarrinho();
+    fecharModal();
+
+    Toastify({
+      text: "Compra registrada com sucesso!",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+    }).showToast();
+  } catch (error) {
+    console.error('Erro ao registrar compra:', error);
+
+    Toastify({
+      text: "Erro ao registrar compra. Por favor, tente novamente mais tarde.",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+    }).showToast();
+  }
+});
+
+
+
+
+// Função para limpar o carrinho após a compra
+function limparCarrinho() {
+  cart = []; // Limpa o array de carrinho
+  updateCartModal(); // Atualiza o modal de carrinho, se necessário
+}
+
+
+
+document.getElementById('checkout-btn').addEventListener('click', async function(event) {
+  event.preventDefault();
+  console.log('Botão "Finalizar Compra" clicado.');
+
+  // Capturar dados do formulário e do carrinho aqui...
+
+  try {
+    // Adicionar código para enviar dados ao Firebase aqui...
+  } catch (error) {
+    console.error('Erro ao registrar compra:', error);
+  }
+});
+
+
+
+
+
+
+
+
+        </script>
+
+
+    <!-- 
+        /* FIM DA CONEXAO COM O FIREBASE */
+    -->
+
+
+
+
 
     <style>
         @media (min-width: 768px) {
@@ -329,20 +535,23 @@
 
 </head>
 <body>
+    <!--HEADER-->
     <header class="w-full h-[420px] bg-cover bg-center bg-home-mobile md:bg-home-pc">
-        <div class="w-full h-full flex flex-col justify-center items-center">          
+        <div class="w-full h-full flex flex-col justify-center items-center">
+          
     </header>
-
+    <!--FIM HEADER-->
 
     <h2 class="text-2xl md:text-3xl font-bold text-center mt-9 mb-6">
         Conheça nosso menu
     </h2>
 
+    <!--INICIO MENU-->
     <div id="menu">
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 md:gap-10 mx-auto max-w-7xl px-2">
-         
+            <!--PRODUTO ITEM-->
             <div class="product-item">
-                <img src="./assets/docedeleite4.jfif" alt="Doce de Leite" class="product-image">
+                <img src="./assets/docedeleite.jpg" alt="Doce de Leite" class="product-image">
                 <div class="product-details">
                     <p class="product-title">Doce de Leite 0,5 kg</p>
                     <p class="product-description">Descubra o sabor irresistível do nosso doce de leite artesanal! Feito com ingredientes selecionados e preparado com muito carinho, cada colherada é uma explosão de doçura e tradição. Perfeito para acompanhar sobremesas ou saborear puro!</p>
@@ -404,9 +613,44 @@
                     </button>
                 </div>
             </div>
+
+
+            <div class="product-item">
+                <img src="./assets/docemamaopedaco.jpg" alt="Doce de Mamão Pedaço" class="product-image">
+                <div class="product-details">
+                    <p class="product-title">Mamão em pedaço</p>
+                    <p class="product-description">Descubra o sabor tropical do nosso doce de figo! Feito com figos frescos e açúcar na medida certa, cada pedaço é uma explosão de doçura e frescor. Ideal para adoçar o seu dia ou para acompanhar aquele cafezinho especial. Experimente e apaixone-se!</p>
+                </div>
+                <div class="flex items-center gap-2 justify-between mt-3">
+                    <p class="product-price">R$ 15,00</p>
+                    <input type="hidden" class="stock-input" value="10">
+                    <button class="add-to-cart-btn" data-id="5" data-name="Doce de Mamão Pedaço" data-price="15">
+                        <i class="fa fa-cart-plus text-lg text-white"></i>
+                    </button>
+                </div>
+            </div>
+            <!--fIM PRODUTO ITEM-->
         </main>
     </div>
-  
+    <!--FIM MENU-->
+
+
+
+    <div class="flex items-center justify-center mt-10 bg-gray-100">
+        <div class="max-w-md p-6 bg-white rounded-lg shadow-md mt-1">
+            <h2 class="text-2xl font-bold mb-4">Inscrever-se para Notificações via WhatsApp</h2>
+            <form id="whatsappForm" class="flex flex-col gap-4">
+                <label for="whatsappNumber" class="text-lg font-medium">Número de WhatsApp:</label>
+                <input type="text" id="whatsappNumber" name="whatsappNumber" class="border-2 rounded-md p-2 outline-none focus:border-blue-500 transition-all duration-300">
+                <button type="submit" class="bg-pink-500 text-white rounded-md py-2 px-4 hover:bg-pink-400 transition-all duration-300">
+                    Inscrever
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!--MODAL CART-->
     <div id="cart-modal" class="bg-black bg-opacity-60 w-full h-full fixed top-0 left-0 z-[99] items-center justify-center hidden">
         <div class="bg-white p-5 rounded-md min-w-[90%] md:min-w-[600px]">
             <h2 class="text-center font-bold text-2xl mb-2">Meu carrinho</h2>
@@ -419,7 +663,7 @@
             <input type="text" placeholder="Digite seu endereço completo" id="address" 
             class="w-full border-2 p-1 rounded my-1">
 
-            <p class="text-red-500 hidden" id="address-warn">Digite seu endereço completo!</p>
+            <p class="text-red-500 hidden" id="address-warn" id="enderecoEntrega">Digite seu endereço completo!</p>
 
             <div class="flex items-center">
                 <input type="checkbox" id="pickup-checkbox" class="mr-2">
@@ -455,6 +699,8 @@
                 <select id="payment-method" class="w-full border-2 p-1 rounded my-1">
                     <option value="">Selecione um meio de pagamento</option>
                     <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
                     <option value="Pix">Pix</option>
                 </select>
                 <p class="text-red-500 hidden" id="payment-warn">Selecione um meio de pagamento!</p>
@@ -462,15 +708,24 @@
 
             <div class="flex justify-end mt-4">
                 <button id="close-modal" class="py-2 px-5 bg-gray-600 text-white rounded-md mr-2">Cancelar</button>
-                <button id="checkout-btn" class="py-2 px-5 bg-pink-500 text-white rounded-md"> Finalizar Compra</button>
+                <button id="checkout-btn" class="py-2 px-5 bg-pink-500 text-white rounded-md">Finalizar Compra</button>
+
             </div>
         </div>
     </div>
+    
+    <!--FIM MODAL CART-->
 
     <button class="fixed right-5 bottom-5 bg-pink-500 p-4 rounded-full" id="cart-btn">
         <i class="fa fa-shopping-cart text-white text-xl"></i>
         <span id="cart-counter" class="bg-red-600 px-2 py-1 rounded-full text-white text-xs absolute -top-2 -right-2">0</span>
     </button>
+
+
+  
+      
+      
+      
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script type="module" src="./script.js"></script>
@@ -483,5 +738,8 @@
     </footer>
     
     
+    
 </body>
 </html>
+
+
